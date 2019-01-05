@@ -19,6 +19,7 @@ If any question, please contact me at following mail address: c.f.corro@uva.nl
 
 ## Usage
 
+```
 #include "diffdp/continuous_eisner.h"
 
 auto arcs = dynet::continuous_eisner(
@@ -28,6 +29,7 @@ auto arcs = dynet::continuous_eisner(
         diffdp::GraphMode::Adjacency, diffdp::GraphMode::Adjacency, // input/output format
         true // set to false to remove root arcs
 );
+```
 
 
 ## Arguments
