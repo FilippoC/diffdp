@@ -1,7 +1,8 @@
 add_library(
         lib-diffdp
-        src/continuous_eisner.cpp
         src/chart.cpp
+        src/algorithm/eisner.cpp
+        src/dynet/eisner.cpp
 )
 
 # Define headers for this library. PUBLIC headers are used for
