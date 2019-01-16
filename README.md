@@ -1,19 +1,24 @@
 # Differentiable Perturb-and-Parse operator
 
-This repository contains the code for the continuous relaxation of the Eisner algorithm presented in:
-"Differentiable Perturb-and-Parse: Semi-Supervised Parsing with a Structured Variational Autoencoder",
+This repository contains the code for the continuous relaxation of the Eisner algorithm presented in:  
+"Differentiable Perturb-and-Parse: Semi-Supervised Parsing with a Structured Variational Autoencoder",  
 Caio Corro, Ivan Titov
+
+
 See: https://openreview.net/forum?id=BJlgNh0qKQ
 
-To cite:
-@InProceedings{perturb-and-parse,
-  author = "Corro, Caio and Titov, Ivan",
-  title = "Differentiable Perturb-and-Parse: Semi-Supervised Parsing with a Structured Variational Autoencoder",
-  booktitle = "Proceedings of Seventh International Conference on Learning Representations",
-  year = "2019"
-}
 
-The full VAE code and model will be released after the proceedings release.
+To cite:  
+```
+@InProceedings{perturb-and-parse,  
+  author = "Corro, Caio and Titov, Ivan",  
+  title = "Differentiable Perturb-and-Parse: Semi-Supervised Parsing with a Structured Variational Autoencoder",  
+  booktitle = "Proceedings of Seventh International Conference on Learning Representations",  
+  year = "2019"  
+}
+```
+
+The full VAE code and model will be released after the official proceedings release.  
 If any question, please contact me at following mail address: c.f.corro@uva.nl
 
 
@@ -54,7 +59,9 @@ This compatible with static graph (i.e. each chart_forward call will check sent
 
 WARNING: the size of batch input *must not* include the root node.
 
-## TODO
+
+## TODO
+
 - The memory usage could be divided by 2
 - Clean duplicate code
 - Static batch size (this could drastically save memory usage)
