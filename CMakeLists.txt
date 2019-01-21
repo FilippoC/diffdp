@@ -9,8 +9,11 @@ include_directories("/Users/filippo/repos/dynet")
 add_subdirectory(lib)
 
 
-add_executable(compare app/src/compare.cpp)
-target_link_libraries(compare lib-diffdp)
+add_executable(compare-phrase app/src/compare-phrase.cpp)
+target_link_libraries(compare-phrase lib-diffdp)
+
+add_executable(compare-eisner app/src/compare-eisner.cpp)
+target_link_libraries(compare-eisner lib-diffdp)
 
 
 file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} test/test-*.cpp)

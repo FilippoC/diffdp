@@ -2,7 +2,9 @@ add_library(
         lib-diffdp
         src/chart.cpp
         src/algorithm/eisner.cpp
+        src/algorithm/binary_phrase.cpp
         src/dynet/eisner.cpp
+        src/dynet/binary_phrase.cpp
 )
 
 # Define headers for this library. PUBLIC headers are used for
