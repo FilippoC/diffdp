@@ -4,7 +4,7 @@
 #include "diffdp/dynet/eisner.h"
 #include "dynet/tensor-eigen.h"
 
-namespace diffdp
+namespace diffdps
 {
 
 std::pair<unsigned, unsigned> from_adjacency(const std::pair<unsigned, unsigned> dep, const diffdp::DependencyGraphMode mode)

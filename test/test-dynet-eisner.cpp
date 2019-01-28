@@ -77,7 +77,6 @@ BOOST_AUTO_TEST_CASE(test_dynet_eisner_algdiff)
                         {(int) head, (int) mod},
                         {(int) head + 1, (int) mod + 1} // not included
                 );
-
                 BOOST_CHECK(check_grad(pc, e_output, 0));
             }
         }

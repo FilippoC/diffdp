@@ -26,26 +26,21 @@ BOOST_AUTO_TEST_CASE(test_dynet_phrase)
                 dynet::ParameterCollection pc;
 
                 std::vector<float> weights(size * size);
-                for (unsigned i = 0 ; i < weights.size() ; ++i)
-                    weights.at(i) = (float) i;
+                //for (unsigned i = 0 ; i < weights.size() ; ++i)
+                //    weights.at(i) = (float) i;
                 auto p_weights = pc.add_parameters(dynet::Dim({size, size}), dynet::ParameterInitFromVector(weights));
 
-                dynet::ComputationGraph cg;
-                cg.set_immediate_compute(true);
-                cg.set_check_validity(true);
-
-                auto e_weights = dynet::parameter(cg, p_weights);
-
                 {
-                    auto e_arcs = dynet::algorithmic_differentiable_binary_phrase_structure(
-                            e_weights,
-                            diffdp::DiscreteMode::ForwardRegularized
-                    );
-
                     for (unsigned head = 0u; head < size; ++head)
                     {
                         for (unsigned mod = 0u; mod < size; ++mod)
                         {
+                            dynet::ComputationGraph cg;
+                            auto e_weights = dynet::parameter(cg, p_weights);
+                            auto e_arcs = dynet::algorithmic_differentiable_binary_phrase_structure(
+                                    e_weights,
+                                    diffdp::DiscreteMode::ForwardRegularized
+                            );
                             auto e_output = dynet::strided_select(
                                     e_arcs,
                                     {(int) 1u, (int) 1u},
@@ -58,15 +53,18 @@ BOOST_AUTO_TEST_CASE(test_dynet_phrase)
                     }
                 }
                 {
-                    auto e_arcs = dynet::entropy_regularized_binary_phrase_structure(
-                            e_weights,
-                            diffdp::DiscreteMode::ForwardRegularized
-                    );
 
                     for (unsigned head = 0u; head < size; ++head)
                     {
                         for (unsigned mod = 0u; mod < size; ++mod)
                         {
+                            dynet::ComputationGraph cg;
+                            auto e_weights = dynet::parameter(cg, p_weights);
+
+                            auto e_arcs = dynet::entropy_regularized_binary_phrase_structure(
+                                    e_weights,
+                                    diffdp::DiscreteMode::ForwardRegularized
+                            );
                             auto e_output = dynet::strided_select(
                                     e_arcs,
                                     {(int) 1u, (int) 1u},

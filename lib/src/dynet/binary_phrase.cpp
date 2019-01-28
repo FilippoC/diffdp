@@ -272,7 +272,7 @@ void EntropyRegularizedBinaryPhraseStructure::forward_dev_impl(
             //auto forward_chart = std::make_shared<diffdp::EisnerChart>(eisner_dim, fmem);
             //auto backward_chart = std::make_shared<diffdp::EisnerChart>(eisner_dim, fmem + diffdp::EisnerChart::required_cells(max_eisner_dim));
             auto forward_chart = std::make_shared<diffdp::BinaryPhraseStructureChart>(eisner_dim, fmem);
-            auto backward_chart = std::make_shared<diffdp::BinaryPhraseStructureChart>(eisner_dim);
+            auto backward_chart = std::make_shared<diffdp::BinaryPhraseStructureChart>(eisner_dim, fmem + diffdp::BinaryPhraseStructureChart::required_cells(max_input_dim));
 
             _ce_ptr2.at(batch) = new diffdp::EntropyRegularizedBinaryPhraseStructure(forward_chart, backward_chart);
 
@@ -332,7 +332,9 @@ void EntropyRegularizedBinaryPhraseStructure::backward_dev_impl(
 
         for (unsigned left = 0u ; left < dp.size() ; ++left)
             for (unsigned right = left + 1u; right < dp.size(); ++right)
+            {
                 output_grad(left, right) += dp.gradient(left, right);
+            }
     }
 #endif
 }
