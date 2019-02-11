@@ -105,4 +105,5 @@ struct EntropyRegularizedEisner :
     virtual ~EntropyRegularizedEisner();
 };
 
+
 }

@@ -4,7 +4,7 @@
 #include "diffdp/dynet/eisner.h"
 #include "dynet/tensor-eigen.h"
 
-namespace diffdps
+namespace diffdp
 {
 
 std::pair<unsigned, unsigned> from_adjacency(const std::pair<unsigned, unsigned> dep, const diffdp::DependencyGraphMode mode)
@@ -126,6 +126,9 @@ size_t AlgorithmicDifferentiableEisner::aux_storage_size() const {
     return dim.batch_elems() * eisner_mem;
 }
 
+
+
+
 template<class MyDevice>
 void AlgorithmicDifferentiableEisner::forward_dev_impl(
         const MyDevice&,
@@ -177,21 +180,21 @@ void AlgorithmicDifferentiableEisner::forward_dev_impl(
 
 
             _ce_ptr2.at(batch)->forward(
-                [&] (const unsigned head, const unsigned mod)
-                {
-                    if (mod == 0u)
-                        throw std::runtime_error("Illegal arc");
-                    if (head == 0u && !with_root_arcs)
+                    [&] (const unsigned head, const unsigned mod)
                     {
-                        return 0.f;
+                        if (mod == 0u)
+                            throw std::runtime_error("Illegal arc");
+                        if (head == 0u && !with_root_arcs)
+                        {
+                            return 0.f;
+                        }
+                        else
+                        {
+                            const auto arc = diffdp::from_adjacency({head, mod}, input_graph);
+                            const float v = input(arc.first, arc.second);
+                            return v;
+                        }
                     }
-                    else
-                    {
-                        const auto arc = from_adjacency({head, mod}, input_graph);
-                        const float v = input(arc.first, arc.second);
-                        return v;
-                    }
-                }
             );
 
             auto output = batch_matrix(fx, batch);
@@ -200,7 +203,7 @@ void AlgorithmicDifferentiableEisner::forward_dev_impl(
             {
                 for (unsigned mod = 1u; mod < eisner_dim ; ++mod)
                 {
-                    const auto arc = from_adjacency({head, mod}, output_graph);
+                    const auto arc = diffdp::from_adjacency({head, mod}, output_graph);
                     if (head == mod)
                     {
                         output(arc.first, arc.second) = 0.f;
@@ -255,7 +258,7 @@ void AlgorithmicDifferentiableEisner::backward_dev_impl(
                 {
                     if (head == 0u && !with_root_arcs)
                         return 0.f;
-                    auto arc = from_adjacency({head, mod}, output_graph);
+                    auto arc = diffdp::from_adjacency({head, mod}, output_graph);
                     const float v = input_grad(arc.first, arc.second);
                     if (!std::isfinite(v))
                         throw std::runtime_error("BAD eisner input grad");
@@ -277,13 +280,14 @@ void AlgorithmicDifferentiableEisner::backward_dev_impl(
                 if (!std::isfinite(v))
                     throw std::runtime_error("BAD eisner output grad");
 
-                auto arc = from_adjacency({head, mod}, input_graph);
+                auto arc = diffdp::from_adjacency({head, mod}, input_graph);
                 output_grad(arc.first, arc.second) += v;
             }
         }
     }
 #endif
 }
+
 
 DYNET_NODE_INST_DEV_IMPL(AlgorithmicDifferentiableEisner)
 
@@ -427,7 +431,7 @@ void EntropyRegularizedEisner::forward_dev_impl(
                         }
                         else
                         {
-                            const auto arc = from_adjacency({head, mod}, input_graph);
+                            const auto arc = diffdp::from_adjacency({head, mod}, input_graph);
                             const float v = input(arc.first, arc.second);
                             return v;
                         }
@@ -440,7 +444,7 @@ void EntropyRegularizedEisner::forward_dev_impl(
             {
                 for (unsigned mod = 1u; mod < eisner_dim ; ++mod)
                 {
-                    const auto arc = from_adjacency({head, mod}, output_graph);
+                    const auto arc = diffdp::from_adjacency({head, mod}, output_graph);
                     if (head == mod)
                     {
                         output(arc.first, arc.second) = 0.f;
@@ -495,7 +499,7 @@ void EntropyRegularizedEisner::backward_dev_impl(
                 {
                     if (head == 0u && !with_root_arcs)
                         return 0.f;
-                    auto arc = from_adjacency({head, mod}, output_graph);
+                    auto arc = diffdp::from_adjacency({head, mod}, output_graph);
                     const float v = input_grad(arc.first, arc.second);
                     if (!std::isfinite(v))
                         throw std::runtime_error("BAD eisner input grad");
@@ -517,7 +521,7 @@ void EntropyRegularizedEisner::backward_dev_impl(
                 if (!std::isfinite(v))
                     throw std::runtime_error("BAD eisner output grad");
 
-                auto arc = from_adjacency({head, mod}, input_graph);
+                auto arc = diffdp::from_adjacency({head, mod}, input_graph);
                 output_grad(arc.first, arc.second) += v;
             }
         }
