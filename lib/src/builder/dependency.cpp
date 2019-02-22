@@ -37,21 +37,13 @@ dynet::Expression DependencyBuilder::relaxed_head(const dynet::Expression& arc_w
     if (e_mask != nullptr)
         if (e_mask->dim().rows() != 1 || e_mask->dim().cols() != arc_weights.dim().cols())
             throw std::runtime_error("Relaxed Head: mask has the wrong dimension");
-
-
-    return arc_weights;
-    /*
-
     const auto p_arc_weights = perturb(arc_weights);
 
     // mask the diagonal
     const unsigned n_max_vertices = arc_weights.dim().rows();
-//    const auto e_inf_mask = dytools::main_diagonal_mask(*_cg, {n_max_vertices, n_max_vertices}, -std::numeric_limits<float>::infinity());
-    //const auto e_inf_mask = dytools::main_diagonal_mask(*_cg, {1, 1}, -std::numeric_limits<float>::infinity());
-    std::cerr << "\nHEEEEEERE\n " << (_training ? "TRAINING" : "EVAL") << std::endl;
+    const auto e_inf_mask = dytools::main_diagonal_mask(*_cg, {n_max_vertices, n_max_vertices}, -std::numeric_limits<float>::infinity());
 
-    //auto heads = dynet::softmax(p_arc_weights + e_inf_mask);
-    return arc_weights;
+    auto heads = dynet::softmax(p_arc_weights + e_inf_mask);
 
     if (e_mask != nullptr)
         heads = dynet::cmult(heads, *e_mask);
@@ -63,7 +55,6 @@ dynet::Expression DependencyBuilder::relaxed_head(const dynet::Expression& arc_w
     heads = dynet::cmult(heads, mask);
 
     return heads;
-    */
 }
 
 dynet::Expression DependencyBuilder::relaxed_nonprojective(const dynet::Expression& arc_weights, std::vector<unsigned>* sizes)
