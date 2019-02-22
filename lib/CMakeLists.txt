@@ -1,10 +1,17 @@
 add_library(
         lib-diffdp
+
         src/chart.cpp
+
         src/algorithm/eisner.cpp
         src/algorithm/binary_phrase.cpp
+
         src/dynet/eisner.cpp
         src/dynet/binary_phrase.cpp
+        #src/dynet/matrix_tree_theorem.cpp
+
+        src/builder/dependency.cpp
+        src/builder/binary-phrase.cpp
 )
 
 # Define headers for this library. PUBLIC headers are used for
@@ -20,6 +27,8 @@ target_include_directories(
         PRIVATE
         src
 )
+add_subdirectory("/Users/filippo/repos/dynet-tools" dytools)
 
 target_link_libraries(lib-diffdp ${Boost_LIBRARIES})
 target_link_libraries(lib-diffdp dynet)
+target_link_libraries(lib-diffdp libdytools)
