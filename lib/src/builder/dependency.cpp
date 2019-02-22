@@ -6,6 +6,7 @@
 #include "dytools/functions/rooted_arborescence_marginals.h"
 #include "dytools/functions/masking.h"
 #include "diffdp/dynet/eisner.h"
+#include "dytools/utils.h"
 
 namespace diffdp
 {
@@ -66,7 +67,7 @@ dynet::Expression DependencyBuilder::relaxed_nonprojective(const dynet::Expressi
 dynet::Expression DependencyBuilder::relaxed_projective_alg_diff(const dynet::Expression& arc_weights, std::vector<unsigned>* sizes)
 {
     const auto p_arc_weights = perturb(arc_weights);
-    return dynet::algorithmic_differentiable_eisner(
+    return dytools::force_cpu(dynet::algorithmic_differentiable_eisner,
             p_arc_weights,
             DiscreteMode::ForwardRegularized,
             DependencyGraphMode::Adjacency,
@@ -79,7 +80,7 @@ dynet::Expression DependencyBuilder::relaxed_projective_alg_diff(const dynet::Ex
 dynet::Expression DependencyBuilder::relaxed_projective_entropy_reg(const dynet::Expression& arc_weights, std::vector<unsigned>* sizes)
 {
     const auto p_arc_weights = perturb(arc_weights);
-    return dynet::entropy_regularized_eisner(
+    return dytools::force_cpu(dynet::entropy_regularized_eisner,
             p_arc_weights,
             DiscreteMode::ForwardRegularized,
             DependencyGraphMode::Adjacency,
