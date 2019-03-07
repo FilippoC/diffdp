@@ -2,6 +2,7 @@
 
 #include "diffdp/dynet/binary_phrase.h"
 #include "dytools/algorithms/span-parser.h"
+#include "dytools/utils.h"
 
 namespace diffdp
 {
@@ -46,13 +47,13 @@ dynet::Expression BinaryPhraseBuilder::argmax(const dynet::Expression& weights)
 dynet::Expression BinaryPhraseBuilder::relaxed_alg_diff(const dynet::Expression& weights)
 {
     const auto p_weights = perturb(weights);
-    return dynet::algorithmic_differentiable_binary_phrase_structure(p_weights, DiscreteMode::ForwardRegularized);
+    return dytools::force_cpu(dynet::algorithmic_differentiable_binary_phrase_structure, p_weights, DiscreteMode::ForwardRegularized, nullptr);
 }
 
 dynet::Expression BinaryPhraseBuilder::relaxed_entropy_Reg(const dynet::Expression& weights)
 {
     const auto p_weights = perturb(weights);
-    return dynet::entropy_regularized_binary_phrase_structure(p_weights, DiscreteMode::ForwardRegularized);
+    return dytools::force_cpu(dynet::entropy_regularized_binary_phrase_structure, p_weights, DiscreteMode::ForwardRegularized, nullptr);
 }
 
 
